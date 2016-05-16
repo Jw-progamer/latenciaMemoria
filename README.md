@@ -1,0 +1,2 @@
+# latenciaMemoria
+# latenciaMemoria
