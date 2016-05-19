@@ -7,32 +7,30 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.TelaSimuladorController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controle.TelaSimuladorController">
     <children>
         <HBox prefHeight="172.0" prefWidth="600.0" spacing="15.0">
             <children>
                 <TableView fx:id="tabela" editable="false" prefHeight="200.0" prefWidth="269.0">
                     <columns>
-                        <TableColumn fx:id="cnome" onEditCommit="#addProcesso" prefWidth="75.0" text="Nome" editable="true" >
+                        <TableColumn fx:id="cnome" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="Nome">
                             <cellValueFactory>
                                 <javafx.scene.control.cell.PropertyValueFactory property="nome" /> 
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="cchegada" onEditCommit="#addProcesso" prefWidth="75.0" text="chegada" editable="true" >
+                        <TableColumn fx:id="cchegada" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="chegada">
                             <cellValueFactory>
                                 <javafx.scene.control.cell.PropertyValueFactory property="tempoChegada" /> 
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="cprocesso" onEditCommit="#addProcesso" prefWidth="75.0" text="processo" editable="true" >
+                        <TableColumn fx:id="cprocesso" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="processo">
                             <cellValueFactory>
                                 <javafx.scene.control.cell.PropertyValueFactory property="tempoExecucao" /> 
                             </cellValueFactory>
@@ -49,22 +47,21 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </opaqueInsets>
                 </VBox>
-                <BorderPane prefHeight="200.0" prefWidth="200.0">
-                    <center>
-                        <Button fx:id="botao" mnemonicParsing="false" onAction="#addProcesso" text="Adicionar novo processo" BorderPane.alignment="CENTER" />
-                    </center>
-                    <bottom>
-                        <FlowPane hgap="10.0" prefHeight="75.0" prefWidth="241.0" vgap="10.0" BorderPane.alignment="TOP_LEFT">
-                            <children>
-                                <Label text="Ociosidade da cpu:" />
-                                <Spinner fx:id="ocisodade" editable="true" />
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
-                        </FlowPane>
-                    </bottom>
-                </BorderPane>
+            <VBox prefHeight="138.0" prefWidth="210.0" spacing="10.0">
+               <children>
+                  <Button fx:id="botao" mnemonicParsing="false" onAction="#addProcesso" text="Adicionar novo processo" />
+                  <Button fx:id="inicia" mnemonicParsing="false" onAction="#callSimulacao" prefHeight="26.0" prefWidth="178.0" text="Iniciar" />
+                  <HBox>
+                     <children>
+                        <Label prefHeight="16.0" prefWidth="147.0" text="Ociosidade:" />
+                        <TextField fx:id="ociosidade" />
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
             </children>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -72,10 +69,10 @@
         </HBox>
         <LineChart fx:id="grafico" prefHeight="257.0" prefWidth="600.0">
             <xAxis>
-                <CategoryAxis side="LEFT" />
+                <NumberAxis side="LEFT" />
             </xAxis>
             <yAxis>
-                <NumberAxis label="Escalas de tempo" side="BOTTOM" />
+                <CategoryAxis label="Escalas de tempo" side="BOTTOM" />
             </yAxis>
         </LineChart>
     </children>
