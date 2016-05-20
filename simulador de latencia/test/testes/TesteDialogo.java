@@ -20,7 +20,7 @@ public class TesteDialogo extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        InserirProcesso dialogo = new InserirProcesso();
+        InserirProcesso dialogo = new InserirProcesso(false);
         
         Optional<Processo> novoProcesso =  dialogo.showAndWait();
         if(novoProcesso.isPresent()){

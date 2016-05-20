@@ -9,7 +9,7 @@ import java.math.MathContext;
 public class Processo implements Comparable<Processo> {
 
     String nome;
-    BigDecimal tempoChegada, tempoExecucao, chegada, saida;
+    BigDecimal tempoChegada, tempoExecucao, auxExecucao, saida;
 
     boolean processado;
 
@@ -18,21 +18,21 @@ public class Processo implements Comparable<Processo> {
         this.nome = nome;
         this.tempoChegada = new BigDecimal(tempoChegada,MathContext.UNLIMITED);
         this.tempoExecucao = new BigDecimal(tempoExecucao,MathContext.UNLIMITED);
-        //	this.chegada = 
+        this.auxExecucao = this.tempoExecucao; 
         this.saida = BigDecimal.ZERO;
         this.processado = false;
     }
 
-    public void setChegada(BigDecimal chegada) {
-        this.chegada = chegada;
+    public void setAuxExecucao(BigDecimal chegada) {
+        this.auxExecucao = chegada;
     }
 
     public void setSaida(BigDecimal saida) {
         this.saida = saida;
     }
 
-    public BigDecimal getChegada() {
-        return chegada;
+    public BigDecimal getauxExecucao() {
+        return auxExecucao;
     }
 
     public BigDecimal getSaida() {

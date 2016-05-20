@@ -5,25 +5,26 @@
  */
 package dialogos;
 
+import java.math.BigDecimal;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
 import modelo.Processo;
 
 /**
  *
  * @author tenshou
  */
-public class InserirProcesso extends Dialog<Processo>{
+public class InserirProcesso extends Dialog<Processo> {
 
-    public InserirProcesso() {
+    public InserirProcesso(boolean tempo) {
         setTitle("Inserir Processo");
         setHeaderText("Digite as informações para o novo processo.");
-        
+
         Label nome = new Label("Nome: ");
         Label tempoChegada = new Label("Tempo de chegada: ");
         Label tempoSaida = new Label("Tempo de execução: ");
@@ -38,19 +39,27 @@ public class InserirProcesso extends Dialog<Processo>{
         dialogoRoot.add(chegadat, 2, 2);
         dialogoRoot.add(tempoSaida, 1, 3);
         dialogoRoot.add(execucaot, 2, 3);
-        
+
         getDialogPane().setContent(dialogoRoot);
-        
-         ButtonType tipoOk = new ButtonType("Inserir processo", ButtonBar.ButtonData.OK_DONE);
-         getDialogPane().getButtonTypes().add(tipoOk);
-         
-         setResultConverter((ButtonType param) -> {
-             if (param == tipoOk) {
-                 return new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
-             }
-             
-             return null;
+
+        ButtonType tipoOk = new ButtonType("Inserir processo", ButtonBar.ButtonData.OK_DONE);
+        getDialogPane().getButtonTypes().add(tipoOk);
+
+        setResultConverter((ButtonType param) -> {
+            if (param == tipoOk) {
+                if (tempo) {
+                    Processo p = new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
+                    p.setTempoChegada(p.getTempoChegada().multiply(new BigDecimal("60")));
+                    p.setTempoExecucao(p.getTempoExecucao().multiply(new BigDecimal("60")));
+                    return p;
+                } else {
+                    return new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
+                }
+
+            }
+
+            return null;
         });
     }
-    
+
 }

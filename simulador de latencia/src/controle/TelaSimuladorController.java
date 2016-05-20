@@ -29,6 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 import modelo.Processo;
 import sun.misc.Queue;
 
@@ -52,7 +53,7 @@ public class TelaSimuladorController implements Initializable {
     RadioButton minuto, segundo;
 
     @FXML
-    LineChart grafico;
+    VBox root;
 
     @FXML
     TableView<Processo> tabela;
@@ -70,12 +71,15 @@ public class TelaSimuladorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         minuto.setToggleGroup(unidade);
         segundo.setToggleGroup(unidade);
-        
 
     }
 
     public void addProcesso() {
-        InserirProcesso dialogo = new InserirProcesso();
+        InserirProcesso dialogo = null;
+        if(minuto.isSelected())
+            dialogo = new InserirProcesso(true);
+        if(segundo.isSelected())
+            dialogo = new InserirProcesso(false);
         try {
             Optional<Processo> pp = dialogo.showAndWait();
             listaProcesso.add(pp.get());
@@ -88,15 +92,17 @@ public class TelaSimuladorController implements Initializable {
     }
 
     public void callSimulacao() {
+        
         Simulador cpu = Simulador.getInstancia();
         PriorityQueue<Processo> fila = new PriorityQueue<>();
+        LineChart<BigDecimal, String> grafico = new LineChart(new NumberAxis(), new CategoryAxis());
         listaProcesso.stream().forEach((p) -> {
             fila.add(p);
         });
         List<Processo> processosEncerrados = cpu.simular(fila, Double.parseDouble(ociosidade.getText()));
-        
+
         processosEncerrados.stream().map((p) -> {
-            grafico = new LineChart(new NumberAxis(), new CategoryAxis());
+
             return p;
         }).map((p) -> {
             XYChart.Series serie = new XYChart.Series();
@@ -107,7 +113,15 @@ public class TelaSimuladorController implements Initializable {
         }).forEach((serie) -> {
             grafico.getData().add(serie);
         });
-        
+        if (root.getChildren().size() >= 2) {
+            root.getChildren().remove(1);
+            root.getChildren().add(grafico);
+            
+        } else {
+            root.getChildren().add(grafico);
+            
+        }
+
     }
 
 }
