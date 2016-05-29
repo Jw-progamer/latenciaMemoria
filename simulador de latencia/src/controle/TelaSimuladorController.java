@@ -76,52 +76,89 @@ public class TelaSimuladorController implements Initializable {
 
     public void addProcesso() {
         InserirProcesso dialogo = null;
-        if(minuto.isSelected())
-            dialogo = new InserirProcesso(true);
-        if(segundo.isSelected())
-            dialogo = new InserirProcesso(false);
         try {
+            if (minuto.isSelected()) {
+                dialogo = new InserirProcesso(true);
+            }
+            if (segundo.isSelected()) {
+                dialogo = new InserirProcesso(false);
+            }
+
             Optional<Processo> pp = dialogo.showAndWait();
+            for (Processo p : listaProcesso) {
+                if (p.getNome().equals(pp.get().getNome())) {
+                    Alert alerta = new Alert(Alert.AlertType.WARNING);
+                    alerta.setTitle("Problema ao inserir processo");
+                    alerta.setHeaderText("Desculpe. Você não pode inserir mais de um processo com mesmo nome.");
+                    alerta.show();
+
+                    return;
+                }
+
+            }
             listaProcesso.add(pp.get());
             tabela.setItems(FXCollections.observableArrayList(listaProcesso));
         } catch (Exception e) {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Erro ao inserir processo");
             alerta.setHeaderText("O processo nao  foi inserido corretamente\nocorreu o seguinte: " + e.getMessage());
+            //alerta.show();
         }
     }
 
     public void callSimulacao() {
-        
+
         Simulador cpu = Simulador.getInstancia();
         PriorityQueue<Processo> fila = new PriorityQueue<>();
-        LineChart<BigDecimal, String> grafico = new LineChart(new NumberAxis(), new CategoryAxis());
+        NumberAxis xAxis = new NumberAxis();
+        CategoryAxis yAxis = new CategoryAxis();
+        LineChart<BigDecimal, String> grafico = new LineChart(xAxis, yAxis);
+        xAxis.setLabel("Tempo(Em segundos)");
+        yAxis.setLabel("Processos");
+        Double ociosidade = Double.parseDouble(this.ociosidade.getText());
+
+        if (ociosidade >= 1 || ociosidade < 0) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Problema ao iniciar a simulação");
+            alerta.setHeaderText("Você não pode começar a ociosidade em 1(100%). Digite um valor entre 0 e 0.9999...");
+            alerta.show();
+            return;
+        }
+
         listaProcesso.stream().forEach((p) -> {
             fila.add(p);
         });
-        List<Processo> processosEncerrados = cpu.simular(fila, Double.parseDouble(ociosidade.getText()));
+        try {
+            List<Processo> processosEncerrados = cpu.simular(fila, ociosidade);
 
-        processosEncerrados.stream().map((p) -> {
+            processosEncerrados.stream().map((p) -> {
 
-            return p;
-        }).map((p) -> {
-            XYChart.Series serie = new XYChart.Series();
-            serie.setName(p.getNome());
-            serie.getData().add(new XYChart.Data(p.getTempoChegada().doubleValue(), p.getNome()));
-            serie.getData().add(new XYChart.Data(p.getSaida().doubleValue(), p.getNome()));
-            return serie;
-        }).forEach((serie) -> {
-            grafico.getData().add(serie);
-        });
-        if (root.getChildren().size() >= 2) {
-            root.getChildren().remove(1);
-            root.getChildren().add(grafico);
-            
-        } else {
-            root.getChildren().add(grafico);
-            
+                return p;
+            }).map((p) -> {
+                XYChart.Series serie = new XYChart.Series();
+                serie.setName(p.getNome());
+                serie.getData().add(new XYChart.Data(p.getTempoChegada().doubleValue(), p.getNome()));
+                serie.getData().add(new XYChart.Data(p.getSaida().doubleValue(), p.getNome()));
+                return serie;
+            }).forEach((serie) -> {
+                grafico.getData().add(serie);
+            });
+            if (root.getChildren().size() >= 2) {
+                root.getChildren().remove(1);
+                root.getChildren().add(grafico);
+
+            } else {
+                root.getChildren().add(grafico);
+
+            }
+        } catch (Exception e) {
+
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Problema ao iniciar a simulação");
+            alerta.setHeaderText("Verifique se a porcentagem do ociosidade é válida, ou não estar vazia.");
+            alerta.show();
+
         }
-
     }
 
 }

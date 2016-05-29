@@ -44,10 +44,18 @@ public class Simulador {
 
         BigDecimal tempoTotal = BigDecimal.ZERO;
         for (int i = 1; i <= pExecutar.size(); i++) {
+            //System.out.println("entrou");
             BigDecimal ocCpu = new BigDecimal(Math.pow(ociosidade, i));
             BigDecimal tCpu = BigDecimal.ONE.subtract(ocCpu);
             ociosidades.put(i, (tCpu.divide(new BigDecimal(i), 2)));
+            //System.out.println("saiu");
         }
+        pExecutar.stream().map((p) -> {
+            p.setAuxExecucao(p.getTempoExecucao());
+            return p;
+        }).forEach((p) -> {
+            p.setProcessado(false);
+        });
 
         while (teste) {
             //System.out.println("entrou");
@@ -55,19 +63,19 @@ public class Simulador {
             //System.out.println(pExecutar.peek().getTempoChegada().compareTo(tempoTotal));
             if (!pExecutar.isEmpty()) {
                 if (pExecutar.peek().getTempoChegada().compareTo(tempoTotal) <= 0) {
-                    //System.out.println("fez checagem");
+                    System.out.println("fez checagem");
                     fila.add(pExecutar.poll());
                 }
             }
 
             for (Processo p : fila) {
-                //System.out.println(p.getTempoExecucao());
-               // System.out.println((ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
-                p.setTempoExecucao(p.getTempoExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
-                //System.out.println(p.getTempoExecucao() - (ociosidades.get(fila.size())));
-//System.out.println(ociosidades.get(fila.size()));
-               // System.out.println(p.getNome()+" "+p.getTempoExecucao());
-                if (p.getTempoExecucao().compareTo(BigDecimal.ZERO) <= 0 && !p.isProcessado()) {
+                //System.out.println(p.getauxExecucao());
+                //System.out.println((ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
+                p.setAuxExecucao(p.getauxExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
+                System.out.println(p.getauxExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
+                System.out.println(ociosidades.get(fila.size()));
+                System.out.println(p.getNome()+" "+p.getauxExecucao());
+                if (p.getauxExecucao().compareTo(BigDecimal.ZERO) <= 0 && !p.isProcessado()) {
                     //System.out.println("Checou");
                     p.setSaida(tempoTotal);
                     p.setProcessado(true);

@@ -6,13 +6,14 @@
 package dialogos;
 
 import java.math.BigDecimal;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import modelo.Processo;
 
 /**
@@ -45,20 +46,32 @@ public class InserirProcesso extends Dialog<Processo> {
         ButtonType tipoOk = new ButtonType("Inserir processo", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().add(tipoOk);
 
-        setResultConverter((ButtonType param) -> {
-            if (param == tipoOk) {
-                if (tempo) {
-                    Processo p = new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
-                    p.setTempoChegada(p.getTempoChegada().multiply(new BigDecimal("60")));
-                    p.setTempoExecucao(p.getTempoExecucao().multiply(new BigDecimal("60")));
-                    return p;
-                } else {
-                    return new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
+        setResultConverter(new Callback<ButtonType, Processo>() {
+            @Override
+            public Processo call(ButtonType param) {
+                if (param == tipoOk) {
+                    
+                    try {
+                        if (tempo) {
+                            Processo p = new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
+                            p.setTempoChegada(p.getTempoChegada().multiply(new BigDecimal("60")));
+                            p.setTempoExecucao(p.getTempoExecucao().multiply(new BigDecimal("60")));
+                            return p;
+                        } else {
+                            return new Processo(nomet.getText(), chegadat.getText(), execucaot.getText());
+                        }
+                    } catch (NumberFormatException e) {
+                        close();
+                        Alert alerta = new Alert(Alert.AlertType.WARNING);
+                        alerta.setTitle("Erro ao inserir processo");
+                        alerta.setHeaderText("Erro. Você digitou um valor vazio, ou inválido nos campos de tempo.\n Por favor, insira apenas números nos campos de tempo.");
+                        alerta.show();
+                    }
+
                 }
 
+                return null;
             }
-
-            return null;
         });
     }
 
