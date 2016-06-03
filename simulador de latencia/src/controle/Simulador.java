@@ -63,7 +63,7 @@ public class Simulador {
             //System.out.println(pExecutar.peek().getTempoChegada().compareTo(tempoTotal));
             if (!pExecutar.isEmpty()) {
                 if (pExecutar.peek().getTempoChegada().compareTo(tempoTotal) <= 0) {
-                    System.out.println("fez checagem");
+                  //  System.out.println("fez checagem");
                     fila.add(pExecutar.poll());
                 }
             }
@@ -72,9 +72,9 @@ public class Simulador {
                 //System.out.println(p.getauxExecucao());
                 //System.out.println((ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
                 p.setAuxExecucao(p.getauxExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
-                System.out.println(p.getauxExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
-                System.out.println(ociosidades.get(fila.size()));
-                System.out.println(p.getNome()+" "+p.getauxExecucao());
+               // System.out.println(p.getauxExecucao().subtract(ociosidades.get(fila.size()).multiply(BigDecimal.ONE)));
+               // System.out.println(ociosidades.get(fila.size()));
+               // System.out.println(p.getNome()+" "+p.getauxExecucao());
                 if (p.getauxExecucao().compareTo(BigDecimal.ZERO) <= 0 && !p.isProcessado()) {
                     //System.out.println("Checou");
                     p.setSaida(tempoTotal);

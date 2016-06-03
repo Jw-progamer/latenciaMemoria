@@ -11,23 +11,26 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controle.TelaSimuladorController">
+<VBox id="root" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@css.css" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controle.TelaSimuladorController">
     <children>
         <HBox prefHeight="172.0" prefWidth="600.0" spacing="15.0">
             <children>
-                <TableView fx:id="tabela" editable="false" prefHeight="200.0" prefWidth="269.0">
+                <TableView fx:id="tabela" editable="true" prefHeight="200.0" prefWidth="269.0" tableMenuButtonVisible="true">
                     <columns>
-                        <TableColumn fx:id="cnome" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="Nome">
+                        <TableColumn fx:id="cnome" editable="true" onEditCommit="#callUpdate" prefWidth="75.0" text="Nome">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="nome" /> 
+                                <javafx.scene.control.cell.PropertyValueFactory property="nome" />
                             </cellValueFactory>
+                            <cellFactory>
+                                
+                            </cellFactory>
                         </TableColumn>
-                        <TableColumn fx:id="cchegada" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="chegada">
+                        <TableColumn fx:id="cchegada" editable="true" onEditCommit="#callUpdate" prefWidth="75.0" text="chegada">
                             <cellValueFactory>
                                 <javafx.scene.control.cell.PropertyValueFactory property="tempoChegada" /> 
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="cprocesso" editable="true" onEditCommit="#addProcesso" prefWidth="75.0" text="processo">
+                        <TableColumn fx:id="cprocesso" editable="true" onEditCommit="#callUpdate" prefWidth="75.0" text="processo">
                             <cellValueFactory>
                                 <javafx.scene.control.cell.PropertyValueFactory property="tempoExecucao" /> 
                             </cellValueFactory>
@@ -46,8 +49,9 @@
                 </VBox>
             <VBox prefHeight="138.0" prefWidth="210.0" spacing="10.0">
                <children>
-                  <Button fx:id="botao" mnemonicParsing="false" onAction="#addProcesso" text="Adicionar novo processo" />
-                  <Button fx:id="inicia" mnemonicParsing="false" onAction="#callSimulacao" prefHeight="26.0" prefWidth="178.0" text="Iniciar" />
+                  <Button fx:id="botao" mnemonicParsing="false" onAction="#addProcesso" styleClass="botao" text="Adicionar novo processo" />
+                  <Button fx:id="deletar" mnemonicParsing="false" onAction="#deletar" styleClass="botao" text="Deletar processo selecionado" />
+                  <Button fx:id="inicia" mnemonicParsing="false" onAction="#callSimulacao" prefHeight="26.0" prefWidth="178.0" styleClass="botao" text="Iniciar" />
                   <HBox>
                      <children>
                         <Label prefHeight="16.0" prefWidth="147.0" text="Ociosidade:" />
